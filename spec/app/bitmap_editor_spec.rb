@@ -98,9 +98,9 @@ describe 'BitmapEditor' do
 
   describe "'L X Y C'" do
     it "colours the pixel (X,Y) with colour C" do
-      stub_input(["I 3 3","L 2 2 A"])
+      stub_input(["I 3 3","L 2 3 A"])
       @be.run
-      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","A","0"],["0","0","0"]])
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"],["0","A","0"]])
     end
 
     it "returns error message if colour is not a capital letter" do

@@ -55,7 +55,7 @@ class BitmapEditor
       return
     end
     puts "ERROR: colour must be a capital letter" and return if !is_capital_letter(c)
-    @image[x.to_i-1][y.to_i-1] = c
+    @image[y.to_i-1][x.to_i-1] = c
   end
 
   def valid_coord(n)
