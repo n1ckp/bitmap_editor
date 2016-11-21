@@ -1,5 +1,5 @@
-require_relative "../spec_helper"
-require_relative "../../app/bitmap_editor"
+require "spec_helper"
+require_relative '../../app/bitmap_editor'
 
 def stub_input(input_array)
   input_array << "X"
@@ -10,7 +10,7 @@ def stub_input(input_array)
   }
 end
 
-describe BitmapEditor do
+describe 'BitmapEditor' do
 
   before :each do
     $stdin = StringIO.new
@@ -62,7 +62,7 @@ describe BitmapEditor do
       @error_message = "each dimension of the image must be between 1 and 250"
     end
 
-    it "sets image instnce variable to MxN array of white pixels" do
+    it "sets image instance variable to MxN array of white pixels" do
       stub_input(["I 3 2"])
       @be.run
       expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"]])
@@ -71,25 +71,31 @@ describe BitmapEditor do
     it "returns error message if M is less than 1" do
       stub_input(["I 0 2"])
       @be.run
-      expect($stdout).to include @error_message
+      expect($stdout.string).to include @error_message
     end
 
     it "returns error message if M is more than 250" do
       stub_input(["I 251 2"])
       @be.run
-      expect($stdout).to include @error_message
+      expect($stdout.string).to include @error_message
     end
 
     it "returns error message if N is less than 1" do
       stub_input(["I 2 0"])
       @be.run
-      expect($stdout).to include @error_message
+      expect($stdout.string).to include @error_message
     end
 
     it "returns error message if M is more than 250" do
       stub_input(["I 2 251"])
       @be.run
-      expect($stdout).to include @error_message
+      expect($stdout.string).to include @error_message
+    end
+
+    it "returns error message if dimension is invalid type" do
+      stub_input(["I I 2"])
+      @be.run
+      expect($stdout.string).to include @error_message
     end
   end
 end
