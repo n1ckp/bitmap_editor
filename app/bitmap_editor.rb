@@ -1,3 +1,5 @@
+DIMENSION_ERROR = "ERROR: each dimension of the image must be between 1 and 250"
+COLOUR_ERROR = "ERROR: colour must be a capital letter"
 class BitmapEditor
 
   def run
@@ -34,6 +36,8 @@ class BitmapEditor
       init_image(args[1], args[2])
     when 'L'
       colour_pixel(args[1], args[2], args[3])
+    when 'V'
+      colour_column(args[1], args[2], args[3], args[4])
     else
       puts 'unrecognised command :('
     end
@@ -41,7 +45,7 @@ class BitmapEditor
 
   def init_image(m, n)
     if !valid_coord(m) || !valid_coord(n)
-      puts "ERROR: each dimension of the image must be between 1 and 250"
+      puts DIMENSION_ERROR
       return
     end
     n.to_i.times do
@@ -51,11 +55,20 @@ class BitmapEditor
 
   def colour_pixel(x, y, c)
     if !valid_coord(x) || !valid_coord(y)
-      puts "ERROR: each dimension of the image must be between 1 and 250"
+      puts DIMENSION_ERROR
       return
     end
-    puts "ERROR: colour must be a capital letter" and return if !is_capital_letter(c)
+    puts COLOUR_ERROR and return if !is_capital_letter(c)
     @image[y.to_i-1][x.to_i-1] = c
+  end
+
+  def colour_column(x, y1, y2, c)
+    if !valid_coord(x) || !valid_coord(y1) || !valid_coord(y2)
+      puts DIMENSION_ERROR
+      return
+    end
+    puts COLOUR_ERROR and return if !is_capital_letter(c)
+    (y1.to_i..y2.to_i).each { |y| @image[y-1][x.to_i-1] = c }
   end
 
   def valid_coord(n)
