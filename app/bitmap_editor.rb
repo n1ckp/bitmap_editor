@@ -38,6 +38,13 @@ class BitmapEditor
       args[2].to_i.times do
         @image << ["0"]*args[1].to_i
       end
+    when 'L'
+      if !valid_coord(args[1]) || !valid_coord(args[2])
+        puts "ERROR: each dimension of the image must be between 1 and 250"
+        return
+      end
+      puts "ERROR: colour must be a capital letter" and return if !is_capital_letter(args[3])
+      @image[args[1].to_i-1][args[2].to_i-1] = args[3]
     else
       puts 'unrecognised command :('
     end
@@ -46,6 +53,10 @@ class BitmapEditor
   def valid_coord(n)
     # strings.to_i is always 0, so this handles invalid param type
     (n.to_i >= 1) && (n.to_i <= 250)
+  end
+
+  def is_capital_letter(c)
+    /[[:upper:]]/.match(c) && c.length == 1
   end
 
   def exit_console

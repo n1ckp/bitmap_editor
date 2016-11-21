@@ -17,6 +17,7 @@ describe 'BitmapEditor' do
     $stdout = StringIO.new
     @input_counter = 0
     @be = BitmapEditor.new
+    @dimension_error = "ERROR: each dimension of the image must be between 1 and 250"
   end
 
   after :each do
@@ -58,10 +59,6 @@ describe 'BitmapEditor' do
   end
 
   describe "'I M N'" do
-    before :each do
-      @error_message = "ERROR: each dimension of the image must be between 1 and 250"
-    end
-
     it "sets image instance variable to MxN array of white pixels" do
       stub_input(["I 3 2"])
       @be.run
@@ -71,31 +68,31 @@ describe 'BitmapEditor' do
     it "returns error message if M is less than 1" do
       stub_input(["I 0 2"])
       @be.run
-      expect($stdout.string).to include @error_message
+      expect($stdout.string).to include @dimension_error
     end
 
     it "returns error message if M is more than 250" do
       stub_input(["I 251 2"])
       @be.run
-      expect($stdout.string).to include @error_message
+      expect($stdout.string).to include @dimension_error
     end
 
     it "returns error message if N is less than 1" do
       stub_input(["I 2 0"])
       @be.run
-      expect($stdout.string).to include @error_message
+      expect($stdout.string).to include @dimension_error
     end
 
     it "returns error message if M is more than 250" do
       stub_input(["I 2 251"])
       @be.run
-      expect($stdout.string).to include @error_message
+      expect($stdout.string).to include @dimension_error
     end
 
     it "returns error message if dimension is invalid type" do
       stub_input(["I I 2"])
       @be.run
-      expect($stdout.string).to include @error_message
+      expect($stdout.string).to include @dimension_error
     end
   end
 
@@ -110,6 +107,18 @@ describe 'BitmapEditor' do
       stub_input(["I 3 3","L 2 2 a"])
       @be.run
       expect($stdout.string).to include "ERROR: colour must be a capital letter"
+    end
+
+    it "returns error message if colour is not a single letter" do
+      stub_input(["I 3 3","L 2 2 ABC"])
+      @be.run
+      expect($stdout.string).to include "ERROR: colour must be a capital letter"
+    end
+
+    it "returns error message if a dimension is invalid" do
+      stub_input(["I 2 2", "L 0 2"])
+      @be.run
+      expect($stdout.string).to include @dimension_error
     end
   end
 end
