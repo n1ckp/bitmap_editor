@@ -31,23 +31,31 @@ class BitmapEditor
   def process_command(args)
     case args[0]
     when 'I'
-      if !valid_coord(args[1]) || !valid_coord(args[2])
-        puts "ERROR: each dimension of the image must be between 1 and 250"
-        return
-      end
-      args[2].to_i.times do
-        @image << ["0"]*args[1].to_i
-      end
+      init_image(args[1], args[2])
     when 'L'
-      if !valid_coord(args[1]) || !valid_coord(args[2])
-        puts "ERROR: each dimension of the image must be between 1 and 250"
-        return
-      end
-      puts "ERROR: colour must be a capital letter" and return if !is_capital_letter(args[3])
-      @image[args[1].to_i-1][args[2].to_i-1] = args[3]
+      colour_pixel(args[1], args[2], args[3])
     else
       puts 'unrecognised command :('
     end
+  end
+
+  def init_image(m, n)
+    if !valid_coord(m) || !valid_coord(n)
+      puts "ERROR: each dimension of the image must be between 1 and 250"
+      return
+    end
+    n.to_i.times do
+      @image << ["0"]*m.to_i
+    end
+  end
+
+  def colour_pixel(x, y, c)
+    if !valid_coord(x) || !valid_coord(y)
+      puts "ERROR: each dimension of the image must be between 1 and 250"
+      return
+    end
+    puts "ERROR: colour must be a capital letter" and return if !is_capital_letter(c)
+    @image[x.to_i-1][y.to_i-1] = c
   end
 
   def valid_coord(n)
