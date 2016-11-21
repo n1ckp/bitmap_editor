@@ -130,4 +130,20 @@ describe 'BitmapEditor' do
       expect(@be.instance_variable_get(:@image)).to eq([["B","0","0"],["B","0","0"],["B","0","0"]])
     end
   end
+
+  describe "'H X1 X2 Y C'" do
+    it "draws horizontal segment of colour C in row Y between columns X1 and X2" do
+      stub_input(["I 3 3", "H 1 2 2 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["B","B","0"],["0","0","0"]])
+    end
+  end
+
+  describe "'C'" do
+    it "clears all pixels to '0'" do
+      stub_input(["I 3 3", "V 1 1 3 B", "C"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"],["0","0","0"]])
+    end
+  end
 end
