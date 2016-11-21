@@ -42,4 +42,54 @@ describe BitmapEditor do
     @be.run
     expect($stdout.string).to include "unrecognised command :("
   end
+
+  describe "'S'" do
+    it "return 'no image' if image hasn't been initialised" do
+      stub_input(["S"])
+      @be.run
+      expect($stdout.string).to include "no image"
+    end
+
+    it "returns the stored image" do
+      stub_input(["I 3 2","S"])
+      @be.run
+      expect($stdout.string).to include "000\n000"
+    end
+  end
+
+  describe "'I M N'" do
+    before :each do
+      @error_message = "each dimension of the image must be between 1 and 250"
+    end
+
+    it "sets image instnce variable to MxN array of white pixels" do
+      stub_input(["I 3 2"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"]])
+    end
+
+    it "returns error message if M is less than 1" do
+      stub_input(["I 0 2"])
+      @be.run
+      expect($stdout).to include @error_message
+    end
+
+    it "returns error message if M is more than 250" do
+      stub_input(["I 251 2"])
+      @be.run
+      expect($stdout).to include @error_message
+    end
+
+    it "returns error message if N is less than 1" do
+      stub_input(["I 2 0"])
+      @be.run
+      expect($stdout).to include @error_message
+    end
+
+    it "returns error message if M is more than 250" do
+      stub_input(["I 2 251"])
+      @be.run
+      expect($stdout).to include @error_message
+    end
+  end
 end
