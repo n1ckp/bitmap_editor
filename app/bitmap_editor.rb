@@ -14,6 +14,8 @@ class BitmapEditor
         show_help
       when 'X'
         exit_console
+      when 'C'
+        @image.each { |row| row.map!{"0"} } 
       when 'S'
         if @image.empty?
           puts "no image"
@@ -38,6 +40,8 @@ class BitmapEditor
       colour_pixel(args[1], args[2], args[3])
     when 'V'
       colour_column(args[1], args[2], args[3], args[4])
+    when 'H'
+      colour_row(args[1], args[2], args[3], args[4])
     else
       puts 'unrecognised command :('
     end
@@ -69,6 +73,15 @@ class BitmapEditor
     end
     puts COLOUR_ERROR and return if !is_capital_letter(c)
     (y1.to_i..y2.to_i).each { |y| @image[y-1][x.to_i-1] = c }
+  end
+
+  def colour_row(x1, x2, y, c)
+    if !valid_coord(x1) || !valid_coord(x2) || !valid_coord(y)
+      puts DIMENSION_ERROR
+      return
+    end
+    puts COLOUR_ERROR and return if !is_capital_letter(c)
+    (x1.to_i..x2.to_i).each { |x| @image[y.to_i-1][x-1] = c }
   end
 
   def valid_coord(n)
