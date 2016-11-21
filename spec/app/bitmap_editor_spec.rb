@@ -59,7 +59,7 @@ describe 'BitmapEditor' do
 
   describe "'I M N'" do
     before :each do
-      @error_message = "each dimension of the image must be between 1 and 250"
+      @error_message = "ERROR: each dimension of the image must be between 1 and 250"
     end
 
     it "sets image instance variable to MxN array of white pixels" do
@@ -96,6 +96,20 @@ describe 'BitmapEditor' do
       stub_input(["I I 2"])
       @be.run
       expect($stdout.string).to include @error_message
+    end
+  end
+
+  describe "'L X Y C'" do
+    it "colours the pixel (X,Y) with colour C" do
+      stub_input(["I 3 3","L 2 2 A"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","A","0"],["0","0","0"]])
+    end
+
+    it "returns error message if colour is not a capital letter" do
+      stub_input(["I 3 3","L 2 2 a"])
+      @be.run
+      expect($stdout.string).to include "ERROR: colour must be a capital letter"
     end
   end
 end

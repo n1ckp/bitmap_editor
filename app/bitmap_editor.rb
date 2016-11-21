@@ -32,7 +32,7 @@ class BitmapEditor
     case args[0]
     when 'I'
       if !valid_coord(args[1]) || !valid_coord(args[2])
-        puts "each dimension of the image must be between 1 and 250"
+        puts "ERROR: each dimension of the image must be between 1 and 250"
         return
       end
       args[2].to_i.times do
