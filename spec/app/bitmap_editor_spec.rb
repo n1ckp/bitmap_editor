@@ -2,6 +2,7 @@ require "spec_helper"
 require_relative '../../app/bitmap_editor'
 
 def stub_input(input_array)
+  # always exit at the end of the test
   input_array << "X"
   allow($stdin).to receive(:gets) {
     response = input_array[@input_counter]
@@ -119,6 +120,14 @@ describe 'BitmapEditor' do
       stub_input(["I 2 2", "L 0 2"])
       @be.run
       expect($stdout.string).to include @dimension_error
+    end
+  end
+
+  describe "'V X Y1 Y2 C'" do
+    it "draws vertical segment of colour C in column X between rows Y1 and Y2" do
+      stub_input(["I 3 3", "V 1 1 3 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["B","0","0"],["B","0","0"],["B","0","0"]])
     end
   end
 end
