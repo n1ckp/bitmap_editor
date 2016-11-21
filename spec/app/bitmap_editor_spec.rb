@@ -11,19 +11,17 @@ def stub_input(input_array)
 end
 
 describe BitmapEditor do
-  before do
-    $stdin = StringIO.new
-    $stdout = StringIO.new
-  end
-
-  after do
-    $stdin = STDIN
-    $stdout = STDOUT
-  end
 
   before :each do
+    $stdin = StringIO.new
+    $stdout = StringIO.new
     @input_counter = 0
     @be = BitmapEditor.new
+  end
+
+  after :each do
+    $stdin = STDIN
+    $stdout = STDOUT
   end
 
   it "exits when 'X' is entered" do
