@@ -46,6 +46,19 @@ describe 'BitmapEditor' do
     expect($stdout.string).to include "unrecognised command :("
   end
 
+  it "can make a face" do
+    stub_input(["I 5 5", "L 2 1 X", "L 4 1 X", "L 3 3 X", "L 1 4 X", "L 5 4 X", "H 2 4 5 X"])
+    @be.run
+    expected = [
+      ["0","X","0","X","0"],
+      ["0","0","0","0","0"],
+      ["0","0","X","0","0"],
+      ["X","0","0","0","X"],
+      ["0","X","X","X","0"]
+    ]
+    expect(@be.instance_variable_get(:@image)).to eq expected
+  end
+
   describe "'S'" do
     it "return 'no image' if image hasn't been initialised" do
       stub_input(["S"])
