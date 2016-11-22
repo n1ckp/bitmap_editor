@@ -1,5 +1,6 @@
 DIMENSION_ERROR = "ERROR: each dimension of the image must be between 1 and 250"
 COLOUR_ERROR = "ERROR: colour must be a capital letter"
+COORD_ERROR = "ERROR: coordinates out of range"
 class BitmapEditor
 
   def run
@@ -15,7 +16,7 @@ class BitmapEditor
       when 'X'
         exit_console
       when 'C'
-        @image.each { |row| row.map!{"0"} } 
+        @image.each { |row| row.map!{"0"} }
       when 'S'
         if @image.empty?
           puts "no image"
@@ -48,49 +49,65 @@ class BitmapEditor
   end
 
   def init_image(m, n)
-    if !valid_coord(m) || !valid_coord(n)
-      puts DIMENSION_ERROR
-      return
-    end
+    return if !valid_dimensions([m,n])
     n.to_i.times do
       @image << ["0"]*m.to_i
     end
   end
 
   def colour_pixel(x, y, c)
-    if !valid_coord(x) || !valid_coord(y)
-      puts DIMENSION_ERROR
-      return
-    end
-    puts COLOUR_ERROR and return if !is_capital_letter(c)
+    return if !valid_dimensions([x,y]) || !valid_colour(c)
     @image[y.to_i-1][x.to_i-1] = c
   end
 
   def colour_column(x, y1, y2, c)
-    if !valid_coord(x) || !valid_coord(y1) || !valid_coord(y2)
-      puts DIMENSION_ERROR
-      return
-    end
-    puts COLOUR_ERROR and return if !is_capital_letter(c)
+    return if !valid_dimensions([x, y1, y2]) || !valid_coords([x], [y1, y2]) || !valid_colour(c)
+    y1,y2 = y2,y1 if y1 > y2
     (y1.to_i..y2.to_i).each { |y| @image[y-1][x.to_i-1] = c }
   end
 
   def colour_row(x1, x2, y, c)
-    if !valid_coord(x1) || !valid_coord(x2) || !valid_coord(y)
-      puts DIMENSION_ERROR
-      return
-    end
-    puts COLOUR_ERROR and return if !is_capital_letter(c)
+    return if !valid_dimensions([x1, x2, y]) || !valid_coords([x1, x2], [y]) || !valid_colour(c)
+    x1,x2 = x2,x1 if x1 > x2
     (x1.to_i..x2.to_i).each { |x| @image[y.to_i-1][x-1] = c }
   end
 
-  def valid_coord(n)
-    # strings.to_i is always 0, so this handles invalid param type
-    (n.to_i >= 1) && (n.to_i <= 250)
+  def valid_colour(c)
+    if !(/[[:upper:]]/.match(c) && c.length == 1)
+      puts COLOUR_ERROR
+      return false
+    end
+    true
   end
 
-  def is_capital_letter(c)
-    /[[:upper:]]/.match(c) && c.length == 1
+  def valid_dimensions(ns)
+    ns.each do |n|
+      # strings.to_i is always 0, so this handles invalid param type
+      if !((n.to_i >= 1) && (n.to_i <= 250))
+        puts DIMENSION_ERROR
+        return false
+      end
+    end
+    true
+  end
+
+  def valid_coords(xs, ys)
+    columns = @image[0].length
+    xs.each do |x|
+      if !((x.to_i >= 1) && (x.to_i <= columns))
+        puts COORD_ERROR
+        return false
+      end
+    end
+
+    rows = @image.length
+    ys.each do |y|
+      if !((y.to_i >= 1) && (y.to_i <= columns))
+        puts COORD_ERROR
+        return false
+      end
+    end
+    true
   end
 
   def exit_console
