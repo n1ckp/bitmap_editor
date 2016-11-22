@@ -19,6 +19,7 @@ describe 'BitmapEditor' do
     @input_counter = 0
     @be = BitmapEditor.new
     @dimension_error = "ERROR: each dimension of the image must be between 1 and 250"
+    @coordinate_range_error = "ERROR: coordinates out of range"
   end
 
   after :each do
@@ -129,6 +130,19 @@ describe 'BitmapEditor' do
       @be.run
       expect(@be.instance_variable_get(:@image)).to eq([["B","0","0"],["B","0","0"],["B","0","0"]])
     end
+
+    it "returns error message if coordinates are out of range" do
+      stub_input(["I 3 3", "V 4 1 3 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"],["0","0","0"]])
+      expect($stdout.string).to include @coordinate_range_error
+    end
+
+    it "works when Y1 > Y2" do
+      stub_input(["I 3 3", "V 1 3 1 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["B","0","0"],["B","0","0"],["B","0","0"]])
+    end
   end
 
   describe "'H X1 X2 Y C'" do
@@ -136,6 +150,19 @@ describe 'BitmapEditor' do
       stub_input(["I 3 3", "H 1 2 2 B"])
       @be.run
       expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["B","B","0"],["0","0","0"]])
+    end
+
+    it "returns error message if coordinates are out of range" do
+      stub_input(["I 3 3", "H 4 1 3 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["0","0","0"],["0","0","0"],["0","0","0"]])
+      expect($stdout.string).to include @coordinate_range_error
+    end
+
+    it "works when X1 > X2" do
+      stub_input(["I 3 3", "H 3 1 1 B"])
+      @be.run
+      expect(@be.instance_variable_get(:@image)).to eq([["B","B","B"],["0","0","0"],["0","0","0"]])
     end
   end
 
